@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply font-sans bg-brand-bg text-brand-dark;
+}
+
+.container-page {
+  @apply max-w-6xl mx-auto px-4;
+}
+
+.section {
+  @apply py-12 md:py-16;
+}
+
+/* Кастомные кнопки через @layer components */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-full
+      bg-brand-primary text-white font-medium hover:bg-brand-primaryDark
+      transition shadow-sm;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-full
+      border border-brand-primary/30 text-brand-primary font-medium
+      hover:bg-brand-primary/5 transition;
+  }
+
+  .pill {
+    @apply inline-flex items-center justify-center px-3 py-1 rounded-full
+      text-xs font-medium bg-brand-muted text-slate-700;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-slate-100;
+  }
+
+  .card-muted {
+    @apply bg-slate-50 rounded-2xl border border-slate-100;
+  }
+}
