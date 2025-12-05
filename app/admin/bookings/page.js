@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import BookingFilters from "../../../components/admin/BookingFilters";
 import BookingTable from "../../../components/admin/BookingTable";
 import BookingDetailModal from "../../../components/admin/BookingDetailModal";
 import Alert from "../../../components/ui/Alert";
 
-export default function AdminBookingsPage() {
+function AdminBookingsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,15 +24,18 @@ export default function AdminBookingsPage() {
       const res = await fetch(`/api/bookings?${params.toString()}`, {
         credentials: "include"
       });
+
       if (res.status === 401) {
         router.push("/admin/login");
         return;
       }
+
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setError(data.error || "Failed to load bookings");
         return;
       }
+
       const data = await res.json();
       setBookings(data.bookings || []);
     } catch (err) {
@@ -73,5 +77,24 @@ export default function AdminBookingsPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function AdminBookingsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-semibold">Bookings</h1>
+            <p className="text-white/60 mt-1">
+              Loading bookings, please wait...
+            </p>
+          </div>
+        </div>
+      }
+    >
+      <AdminBookingsPageContent />
+    </Suspense>
   );
 }

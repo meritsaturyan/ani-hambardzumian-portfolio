@@ -21,6 +21,7 @@ export async function PATCH(request, { params }) {
   try {
     const body = await request.json();
     const parsed = schema.safeParse(body);
+
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid status" },
@@ -28,6 +29,20 @@ export async function PATCH(request, { params }) {
       );
     }
 
+    // 1️⃣ Если базы нет (например на Vercel, где ты не задала DATABASE_URL),
+    // просто возвращаем "фейковый" объект брони, чтобы админка не ломалась.
+    if (!process.env.DATABASE_URL) {
+      const demoBooking = {
+        id,
+        status: parsed.data.status,
+        // любые поля, если хочешь, можно добавить здесь
+        demo: true
+      };
+
+      return NextResponse.json({ booking: demoBooking });
+    }
+
+    // 2️⃣ Обычный режим — когда подключена настоящая база
     const booking = await updateBookingStatus(id, parsed.data.status);
     if (!booking) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
