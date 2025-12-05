@@ -1,59 +1,50 @@
 import { NextResponse } from "next/server";
-import {
-  getPavilionBySlug,
-  getPavilionBookingsUpcoming
-} from "../../../../lib/pavilions";
+import { query } from "@/lib/db";
 
-export async function GET(request, { params }) {
-  const { slug } = params;
-
-  // 1️⃣ Если DATABASE_URL не настроена (например, на Vercel без БД) —
-  // работаем в демо-режиме и НЕ обращаемся к базе.
-  if (!process.env.DATABASE_URL) {
-    const demoPavilion = {
-      id: 1,
-      name: "Demo Pavilion",
-      slug,
-      description:
-        "This is a demo pavilion used for preview when the database is not configured.",
-      base_price: 50000
-    };
-
-    const demoBookings = [
-      // можешь добавить тут пример бронирований, если нужно
-      // {
-      //   id: 1,
-      //   pavilion_id: 1,
-      //   date: "2025-01-01",
-      //   time_from: "10:00",
-      //   time_to: "12:00",
-      //   status: "confirmed"
-      // }
-    ];
-
-    return NextResponse.json({
-      pavilion: demoPavilion,
-      upcomingBookings: demoBookings
-    });
+const demoPavilions = [
+  {
+    id: 1,
+    slug: "white-hall",
+    name: "White Hall",
+    location: "Center, Yerevan",
+    description: "Bright white studio with cyclorama, perfect for fashion and beauty shoots.",
+    base_price: 50000,
+    area_sqm: 90
+  },
+  {
+    id: 2,
+    slug: "dark-loft",
+    name: "Dark Loft",
+    location: "Center, Yerevan",
+    description: "Atmospheric dark loft with textured walls and controlled lighting.",
+    base_price: 55000,
+    area_sqm: 80
   }
+];
 
-  // 2️⃣ Обычный режим — когда база настроена
+export async function GET() {
   try {
-    const pavilion = await getPavilionBySlug(slug);
-    if (!pavilion) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // Пытаемся сходить в БД
+    const res = await query(
+      "SELECT id, slug, name, description, base_price FROM pavilions ORDER BY id ASC"
+    );
+
+    // Если в проде БД выключена или таблица пустая — показываем демо-павильоны
+    if (process.env.NODE_ENV === "production" && (!res || res.rowCount === 0)) {
+      return NextResponse.json({ pavilions: demoPavilions });
     }
 
-    const bookings = await getPavilionBookingsUpcoming(pavilion.id, 30);
-
-    return NextResponse.json({
-      pavilion,
-      upcomingBookings: bookings
-    });
+    return NextResponse.json({ pavilions: res.rows });
   } catch (err) {
-    console.error("GET /api/pavilions/[slug] error:", err);
+    console.error("GET /api/pavilions error:", err);
+
+    // В проде при ошибке тоже даём демо, чтобы сайт не ломался и не был пустым
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json({ pavilions: demoPavilions });
+    }
+
     return NextResponse.json(
-      { error: "Failed to load pavilion" },
+      { error: "Failed to load pavilions" },
       { status: 500 }
     );
   }
