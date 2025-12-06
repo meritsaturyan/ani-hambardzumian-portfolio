@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import PavilionCard from "../../components/pavilions/PavilionCard";
@@ -14,7 +13,7 @@ export default async function PavilionsPage() {
       <Header />
 
       <main className="flex-1">
-        <section className="section">
+        <section className="section py-10 md:py-16">
           <div className="container-page">
             <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
               <div>
@@ -32,34 +31,20 @@ export default async function PavilionsPage() {
               </div>
 
               <div className="flex flex-wrap gap-3 text-xs md:text-sm">
-                <span className="pill">
-                  Natural light
-                </span>
-                <span className="pill">
-                  Cycloramas
-                </span>
-                <span className="pill">
-                  Dressing rooms
-                </span>
-                <span className="pill">
-                  Central locations
-                </span>
+                <span className="pill">Natural light</span>
+                <span className="pill">Cycloramas</span>
+                <span className="pill">Dressing rooms</span>
+                <span className="pill">Central locations</span>
               </div>
             </div>
 
             {/* Простая “панель фильтров” сверху (пока без логики) */}
-            <div className="card-muted mb-6 p-4 md:p-5 flex flex-wrap gap-4 items-center justify-between">
+            <div className="card-muted mb-6 p-4 md:p-5 flex flex-col md:flex-row flex-wrap gap-4 md:items-center md:justify-between">
               <div className="flex flex-wrap gap-3 text-xs md:text-sm text-slate-600">
                 <span>Capacity</span>
-                <button className="pill border-slate-200">
-                  Up to 6 people
-                </button>
-                <button className="pill border-slate-200">
-                  6–12 people
-                </button>
-                <button className="pill border-slate-200">
-                  12+ people
-                </button>
+                <button className="pill border-slate-200">Up to 6 people</button>
+                <button className="pill border-slate-200">6–12 people</button>
+                <button className="pill border-slate-200">12+ people</button>
               </div>
               <div className="flex flex-wrap gap-3 text-xs md:text-sm text-slate-600">
                 <span>Type</span>
@@ -69,13 +54,13 @@ export default async function PavilionsPage() {
               </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {pavilions.map((pavilion) => (
                 <PavilionCard key={pavilion.id} pavilion={pavilion} />
               ))}
 
               {pavilions.length === 0 && (
-                <p className="text-sm text-slate-600">
+                <p className="col-span-full text-sm text-slate-600">
                   No pavilions found. Make sure the database is initialized and
                   seeded.
                 </p>
