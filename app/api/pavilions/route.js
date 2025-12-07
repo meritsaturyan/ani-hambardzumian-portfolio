@@ -28,18 +28,34 @@ export async function GET() {
   const isProd = process.env.NODE_ENV === "production";
 
   try {
-    // Пытаемся получить павильоны из базы
+    // БЕЗ base_price, чтобы не падать, если колонки нет
     const res = await query(
-      "SELECT id, slug, name, description, base_price FROM pavilions ORDER BY id ASC"
+      "SELECT id, slug, name, location, description FROM pavilions ORDER BY id ASC"
     );
 
-    // В проде, если база отключена или таблица пустая -> показываем демо
+    // Если в проде база пустая — показываем демо
     if (isProd && (!res || res.rowCount === 0)) {
       return NextResponse.json({ pavilions: demoPavilions });
     }
 
-    // Локально, если БД настроена, используем реальные данные
-    return NextResponse.json({ pavilions: res.rows });
+    const rows = res?.rows || [];
+
+    // Достраиваем base_price и area_sqm дефолтами (чтобы фронт не ломался)
+    const pavilions = rows.map((row, index) => {
+      const fallback = demoPavilions[index] || demoPavilions[0];
+
+      return {
+        ...row,
+        base_price:
+          typeof row.base_price === "number"
+            ? row.base_price
+            : fallback.base_price,
+        area_sqm:
+          typeof row.area_sqm === "number" ? row.area_sqm : fallback.area_sqm
+      };
+    });
+
+    return NextResponse.json({ pavilions });
   } catch (err) {
     console.error("GET /api/pavilions error:", err);
 

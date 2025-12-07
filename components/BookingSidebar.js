@@ -71,7 +71,7 @@ export default function BookingSidebar({ pavilion }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           pavilionId: pavilion.id,
-          date, // уже строка YYYY-MM-DD
+          date,
           start_time: startTime,
           end_time: endTime,
           customer_name: name,
@@ -111,10 +111,12 @@ export default function BookingSidebar({ pavilion }) {
 
   return (
     <div className="w-full max-w-[580px] shrink-0 lg:mr-10">
-      <div className="sticky top-[112px] max-h-[calc(100vh-140px)] overflow-y-auto rounded-[32px] shadow-[0_32px_80px_rgba(15,23,42,0.8)] z-30">
-        <div className="flex w-full rounded-[32px] overflow-hidden border border-slate-900 bg-slate-900">
+      {/* sticky и max-height только на больших экранах */}
+      <div className="rounded-[32px] shadow-[0_32px_80px_rgba(15,23,42,0.8)] z-30 lg:sticky lg:top-[112px] lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto">
+        {/* на мобиле колонка, на md+ — две колонки */}
+        <div className="flex flex-col md:flex-row w-full rounded-[32px] overflow-hidden border border-slate-900 bg-slate-900">
           {/* ЛЕВАЯ ТЁМНАЯ КОЛОНКА */}
-          <aside className="w-60 bg-slate-800 text-slate-100 flex flex-col justify-between py-6 px-5">
+          <aside className="w-full md:w-60 bg-slate-800 text-slate-100 flex flex-col justify-between py-6 px-5">
             <div className="space-y-6">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">
@@ -174,7 +176,7 @@ export default function BookingSidebar({ pavilion }) {
           {/* ПРАВАЯ БЕЛАЯ ПАНЕЛЬ */}
           <form
             onSubmit={handleSubmit}
-            className="flex-1 bg-white text-slate-900 px-6 py-6 flex flex-col gap-5"
+            className="flex-1 bg-white text-slate-900 px-4 py-5 md:px-6 md:py-6 flex flex-col gap-5"
           >
             <div className="border-b border-slate-200 pb-4">
               <h2 className="text-lg font-semibold">{stepTitle}</h2>
@@ -322,7 +324,6 @@ function StepDateTime({
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [duration, setDuration] = useState("1h");
 
-  // разбираем выбранную дату из строки YYYY-MM-DD
   let selectedY = null;
   let selectedM = null;
   let selectedD = null;
@@ -330,7 +331,7 @@ function StepDateTime({
     const parts = date.split("-");
     if (parts.length === 3) {
       selectedY = Number(parts[0]);
-      selectedM = Number(parts[1]) - 1; // месяц 0–11
+      selectedM = Number(parts[1]) - 1;
       selectedD = Number(parts[2]);
     }
   }
@@ -367,7 +368,6 @@ function StepDateTime({
 
   function handleSelectDay(day) {
     if (!day) return;
-    // формируем строку YYYY-MM-DD вручную, без Date и без toISOString
     const iso = [
       String(viewYear),
       String(viewMonth + 1).padStart(2, "0"),
@@ -378,7 +378,7 @@ function StepDateTime({
 
   return (
     <div className="space-y-4 text-sm">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <select
           className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
           value={viewMonth}
