@@ -1,5 +1,14 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/admin/login/route": "app/api/admin/login/route.js",
+  "/api/pavilions/[slug]/route": "app/api/pavilions/[slug]/route.js",
+  "/api/bookings/route": "app/api/bookings/route.js",
+  "/api/bookings/[id]/route": "app/api/bookings/[id]/route.js",
+  "/api/pavilions/route": "app/api/pavilions/route.js",
   "/page": "app/page.js",
   "/pavilions/[slug]/page": "app/pavilions/[slug]/page.js",
-  "/pavilions/page": "app/pavilions/page.js"
+  "/pavilions/page": "app/pavilions/page.js",
+  "/admin/bookings/page": "app/admin/bookings/page.js",
+  "/admin/login/page": "app/admin/login/page.js",
+  "/admin/page": "app/admin/page.js"
 }

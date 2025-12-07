@@ -1,0 +1,15 @@
+"use strict";(()=>{var e={};e.id=946,e.ids=[946],e.modules={399:e=>{e.exports=require("next/dist/compiled/next-server/app-page.runtime.prod.js")},517:e=>{e.exports=require("next/dist/compiled/next-server/app-route.runtime.prod.js")},5900:e=>{e.exports=require("pg")},440:(e,t,o)=>{o.r(t),o.d(t,{originalPathname:()=>_,patchFetch:()=>g,requestAsyncStorage:()=>d,routeModule:()=>l,serverHooks:()=>m,staticGenerationAsyncStorage:()=>h});var r={};o.r(r),o.d(r,{GET:()=>c});var a=o(9303),s=o(8716),i=o(670),n=o(7070),p=o(53);let u=[{id:1,slug:"white-hall",name:"White Hall",location:"Center, Yerevan",description:"Bright white studio with cyclorama, perfect for fashion and beauty shoots.",base_price:5e4,area_sqm:90,capacity_min:2,capacity_max:8,supports_photo:!0,supports_video:!0,supports_content:!0},{id:2,slug:"dark-loft",name:"Dark Loft",location:"Center, Yerevan",description:"Atmospheric dark loft with textured walls and controlled lighting.",base_price:55e3,area_sqm:80,capacity_min:2,capacity_max:12,supports_photo:!0,supports_video:!0,supports_content:!1}];async function c(){try{let e=await (0,p.I)(`SELECT
+         id,
+         slug,
+         name,
+         location,
+         description,
+         base_price,
+         area_sqm,
+         capacity_min,
+         capacity_max,
+         supports_photo,
+         supports_video,
+         supports_content
+       FROM pavilions
+       ORDER BY id ASC`);if(!e||0===e.rowCount)return n.NextResponse.json({pavilions:u});return n.NextResponse.json({pavilions:e.rows})}catch(e){return console.error("GET /api/pavilions error:",e),n.NextResponse.json({pavilions:u})}}let l=new a.AppRouteRouteModule({definition:{kind:s.x.APP_ROUTE,page:"/api/bookings/route",pathname:"/api/bookings",filename:"route",bundlePath:"app/api/bookings/route"},resolvedPagePath:"/Users/meritsaturyan/Desktop/anihambardzumyan/ani-hambardzumian-studios/app/api/bookings/route.js",nextConfigOutput:"",userland:r}),{requestAsyncStorage:d,staticGenerationAsyncStorage:h,serverHooks:m}=l,_="/api/bookings/route";function g(){return(0,i.patchFetch)({serverHooks:m,staticGenerationAsyncStorage:h})}},53:(e,t,o)=>{o.d(t,{I:()=>l});var r=o(5900);let{DATABASE_URL:a,PGSSL:s,NODE_ENV:i}=process.env,n="production"===i,p=!a||/USER|PASS|HOST|DB_NAME/.test(a||""),u=(a||"").includes("127.0.0.1")||(a||"").includes("localhost"),c=null;async function l(e,t=[]){if(!c){if(n)return console.warn("[db] query() called without configured pool in production. Returning empty result."),{rows:[],rowCount:0};throw Error("Database is not configured. Set a real DATABASE_URL in your .env")}let o=await c.connect();try{return await o.query(e,t)}finally{o.release()}}p||n&&u?n||console.warn("[db] DATABASE_URL is not configured or uses localhost. DB access is disabled. Set real Postgres URL in .env (например: postgres://user:pass@host:5432/ani_hambardzumian_studios)"):c=new r.Pool({connectionString:a,ssl:"true"===s&&{rejectUnauthorized:!1}})}};var t=require("../../../webpack-runtime.js");t.C(e);var o=e=>t(t.s=e),r=t.X(0,[948,972],()=>o(440));module.exports=r})();
